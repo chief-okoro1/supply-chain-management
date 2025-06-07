@@ -35,3 +35,45 @@
     })
   }
 )
+
+;; Verification Mechanism Mapping
+(define-map product-verifications
+  uint
+  {
+    verified-parties: (list 10 principal),
+    verification-threshold: uint,
+    is-verified: bool,
+  }
+)
+
+;; Transportation Log Mapping
+(define-map transportation-logs
+  uint
+  (list 20 {
+    carrier: principal,
+    timestamp: uint,
+    location: (string-ascii 100),
+    status: uint
+  })
+)
+
+;; Read-only Functions for Retrieving Product Information
+(define-read-only (get-product-details (product-id uint))
+  (map-get? product-provenance product-id)
+)
+
+(define-read-only (get-transportation-logs (product-id uint))
+  (map-get? transportation-logs product-id)
+)
+
+(define-read-only (get-product-verification-status (product-id uint))
+  (map-get? product-verifications product-id)
+)
+
+;; Mapping for Product Ownership
+(define-map product-ownership
+  uint  ;; product-id
+  principal  ;; current owner
+)
+
+
