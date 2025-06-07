@@ -226,3 +226,28 @@
     permissions: (list 10 uint)
   }
 )
+
+;; Enhanced Audit Trail Mechanism
+(define-map comprehensive-audit-log
+  uint  ;; unique audit entry ID
+  {
+    timestamp: uint,
+    event-type: (string-ascii 50),
+    actor: principal,
+    details: (string-ascii 500),
+    transaction-hash: (string-ascii 100)
+  }
+)
+
+;; Advanced Fee Structure
+(define-map transaction-fee-structure
+  {
+    transaction-type: (string-ascii 50),
+    product-category: uint
+  }
+  {
+    base-fee: uint,
+    percentage-fee: uint,
+    dynamic-multiplier: uint
+  }
+)
