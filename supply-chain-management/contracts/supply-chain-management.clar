@@ -350,3 +350,52 @@
     none
   )
 )
+
+;; Create Governance Proposal
+(define-public (create-governance-proposal
+  (proposal-type (string-ascii 50))
+  (proposed-changes (string-ascii 500))
+)
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-UNAUTHORIZED)
+    (map-set governance-proposals 
+      tx-sender 
+      {
+        proposal-type: proposal-type,
+        proposed-changes: proposed-changes,
+        voting-start: stacks-block-height,
+        voting-end: (+ stacks-block-height u100),
+        votes-for: u0,
+        votes-against: u0,
+        status: u1  ;; Active
+      }
+    )
+    (ok true)
+  )
+)
+
+;; Vote on Governance Proposal
+(define-public (vote-on-proposal
+  (proposer principal)
+  (vote bool)
+)
+  (let ((current-proposal (unwrap! 
+        (map-get? governance-proposals proposer) 
+        ERR-NOT-FOUND)))
+    (asserts! (< stacks-block-height (get voting-end current-proposal)) ERR-UNAUTHORIZED)
+    (map-set governance-proposals 
+      proposer 
+      (merge current-proposal 
+        {
+          votes-for: (if vote 
+                        (+ (get votes-for current-proposal) u1)
+                        (get votes-for current-proposal)),
+          votes-against: (if (not vote)
+                             (+ (get votes-against current-proposal) u1)
+                             (get votes-against current-proposal))
+        }
+      )
+    )
+    (ok true)
+  )
+)
