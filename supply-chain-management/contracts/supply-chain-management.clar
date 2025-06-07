@@ -280,3 +280,30 @@
     unread-count: uint
   }
 )
+
+;; Stakeholder Performance Tracking
+(define-map stakeholder-reputation
+  principal
+  {
+    total-transactions: uint,
+    successful-transactions: uint,
+    reputation-score: uint,
+    last-performance-update: uint
+  }
+)
+
+;; Assign Role to User
+(define-public (assign-user-role 
+  (user principal) 
+  (role uint) 
+  (permissions (list 10 uint))
+)
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-UNAUTHORIZED)
+    (map-set user-roles user {
+      role: role,
+      permissions: permissions
+    })
+    (ok true)
+  )
+)
