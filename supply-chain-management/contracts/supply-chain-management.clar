@@ -76,4 +76,55 @@
   principal  ;; current owner
 )
 
+;; Read-only Function
+(define-read-only (get-product-owner (product-id uint))
+  (map-get? product-ownership product-id)
+)
 
+;; Mapping for Product Certifications
+(define-map product-certifications
+  uint
+  {
+    certifications: (list 10 (string-ascii 100)),
+    compliance-docs: (list 5 (string-ascii 100))
+  }
+)
+
+;; Read-only Function
+(define-read-only (get-product-certifications (product-id uint))
+  (map-get? product-certifications product-id)
+)
+
+;; Contract-level Pause Variable
+(define-data-var contract-paused bool false)
+
+;; Pausable Trait
+(define-trait pausable-trait
+  ((is-paused () (response bool uint)))
+)
+
+;; Audit Log Entry Structure
+(define-map audit-logs
+  uint  ;; product-id
+  {
+    events: (list 50 {
+      event-type: (string-ascii 50),
+      timestamp: uint,
+      actor: principal,
+      details: (string-ascii 200)
+    })
+  }
+)
+
+;; Multi-Signature Approval Mapping
+(define-map multi-sig-approvals
+  {
+    product-id: uint,
+    approval-type: (string-ascii 50)
+  }
+  {
+    required-signatures: uint,
+    current-signatures: (list 10 principal),
+    is-approved: bool
+  }
+)
