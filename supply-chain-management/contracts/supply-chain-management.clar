@@ -251,3 +251,32 @@
     dynamic-multiplier: uint
   }
 )
+
+;; Governance Proposal Mechanism
+(define-map governance-proposals
+  principal  ;; proposal creator
+  {
+    proposal-type: (string-ascii 50),
+    proposed-changes: (string-ascii 500),
+    voting-start: uint,
+    voting-end: uint,
+    votes-for: uint,
+    votes-against: uint,
+    status: uint
+  }
+)
+
+;; Comprehensive Notification Mechanism
+(define-map user-notifications
+  principal
+  {
+    notifications: (list 50 {
+      id: uint,
+      type: (string-ascii 50),
+      message: (string-ascii 500),
+      timestamp: uint,
+      read-status: bool
+    }),
+    unread-count: uint
+  }
+)
