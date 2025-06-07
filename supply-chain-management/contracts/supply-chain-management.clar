@@ -171,3 +171,58 @@
     })
   }
 )
+
+;; Fee Structure Mapping
+(define-map transaction-fees
+  {
+    product-id: uint,
+    transaction-type: (string-ascii 50)
+  }
+  {
+    base-fee: uint,
+    dynamic-fee-multiplier: uint
+  }
+)
+
+;; Incentive Tracking
+(define-map stakeholder-incentives
+  principal
+  {
+    total-earned-incentives: uint,
+    pending-incentives: uint,
+    performance-score: uint
+  }
+)
+
+;; Contract Upgrade Proposal
+(define-map upgrade-proposals
+  principal  ;; proposer
+  {
+    new-contract-address: principal,
+    votes-for: (list 10 principal),
+    votes-against: (list 10 principal),
+    proposal-status: bool
+  }
+)
+
+;; Notification Mapping
+(define-map notifications
+  principal
+  {
+    unread-notifications: (list 50 {
+      notification-type: (string-ascii 50),
+      message: (string-ascii 200),
+      timestamp: uint
+    })
+  }
+)
+
+
+;; Role-Based Access Control
+(define-map user-roles 
+  principal 
+  {
+    role: uint,
+    permissions: (list 10 uint)
+  }
+)
