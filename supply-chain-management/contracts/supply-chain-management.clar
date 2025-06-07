@@ -307,3 +307,46 @@
     (ok true)
   )
 )
+
+;; Create Comprehensive Audit Entry
+(define-public (log-comprehensive-audit 
+  (event-type (string-ascii 50))
+  (details (string-ascii 500))
+  (transaction-hash (string-ascii 100))
+)
+  (let ((audit-id (default-to u0 (some (fold + (list u1 u2 u3) u0)))))
+    (map-set comprehensive-audit-log 
+      audit-id 
+      {
+        timestamp: stacks-block-height,
+        event-type: event-type,
+        actor: tx-sender,
+        details: details,
+        transaction-hash: transaction-hash
+      }
+    )
+    (ok audit-id)
+  )
+)
+
+;; Calculate Transaction Fees
+(define-read-only (calculate-transaction-fee
+  (transaction-type (string-ascii 50))
+  (product-category uint)
+  (transaction-amount uint)
+)
+  (match (map-get? transaction-fee-structure 
+          {
+            transaction-type: transaction-type, 
+            product-category: product-category
+          })
+    fee-structure 
+      (let ((base-fee (get base-fee fee-structure))
+            (percentage-fee (get percentage-fee fee-structure))
+            (dynamic-multiplier (get dynamic-multiplier fee-structure)))
+        (some (+ base-fee 
+                 (* transaction-amount percentage-fee) 
+                 (* base-fee dynamic-multiplier))))
+    none
+  )
+)
