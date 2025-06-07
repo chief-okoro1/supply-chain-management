@@ -128,3 +128,46 @@
     is-approved: bool
   }
 )
+
+;; Product Version Mapping
+(define-map product-versions
+  uint  ;; product-id
+  {
+    current-version: uint,
+    version-history: (list 20 {
+      version-number: uint,
+      version-details: (string-ascii 200),
+      timestamp: uint
+    })
+  }
+)
+
+;; Stakeholder Roles Enum
+(define-constant ROLE-MANUFACTURER u1)
+(define-constant ROLE-TRANSPORTER u2)
+(define-constant ROLE-DISTRIBUTOR u3)
+(define-constant ROLE-REGULATOR u4)
+
+;; Stakeholder Mapping
+(define-map stakeholders
+  principal
+  {
+    name: (string-ascii 100),
+    role: uint,
+    approved: bool,
+    permissions: (list 10 uint)
+  }
+)
+
+;; Regulatory Compliance Mapping
+(define-map regulatory-compliance
+  uint  ;; product-id
+  {
+    compliance-standards: (list 10 (string-ascii 100)),
+    regulatory-checks: (list 10 {
+      check-name: (string-ascii 100),
+      status: bool,
+      timestamp: uint
+    })
+  }
+)
